@@ -6,7 +6,7 @@ module.exports = {
     commonjs: true,
     es6: true
   },
-  extends: ['plugin:react/recommended', 'prettier/@typescript-eslint'],
+  extends: ['prettier/@typescript-eslint'],
   plugins: ['@typescript-eslint', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -25,4 +25,3 @@ module.exports = {
     'prettier/prettier': ['error', prettierConfig]
   }
 }
-Terms
