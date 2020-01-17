@@ -1,19 +1,38 @@
 // TODO: Fix types error
 import * as Comlink from 'comlink'
-import * as OffscreenCanvasWorker from './offscreencanvas.worker'
-// @ts-ignore
-const OffscreenCanvas = Comlink.wrap(new OffscreenCanvasWorker())
+import App from './app'
+import * as AppWorker from './app.worker'
 
 const init = async () => {
   // Offscreen canvas
   const htmlCanvas: HTMLCanvasElement = document.getElementById(
     'app'
   ) as HTMLCanvasElement
+
+  /**
+   * Not Support OffScreen mode
+   */
+  if (!htmlCanvas.transferControlToOffscreen) {
+    console.info('Not support Offscreen Canvas')
+    const app = new App({
+      canvas: htmlCanvas,
+      width: window.innerWidth,
+      height: window.innerHeight,
+      pixelRatio: window.devicePixelRatio
+    })
+    app.init()
+    return
+  }
+
+  /**
+   * OffScreen mode
+   */
+  console.info('Offscreen Canvas')
   const offscreen = htmlCanvas.transferControlToOffscreen()
   // @ts-ignore
-  const offscreenCanvas = await new OffscreenCanvas()
+  const OffscreenApp = Comlink.wrap(new AppWorker())
   // @ts-ignore
-  offscreenCanvas.renderer(
+  const app = await new OffscreenApp(
     Comlink.transfer(
       {
         canvas: offscreen,
@@ -21,9 +40,11 @@ const init = async () => {
         height: window.innerHeight,
         pixelRatio: window.devicePixelRatio
       },
+      // @ts-ignore
       [offscreen]
     )
   )
+  app.init()
 }
 
 init()
