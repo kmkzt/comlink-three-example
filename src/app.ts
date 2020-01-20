@@ -1,7 +1,5 @@
-// https://github.com/mrdoob/three.js/blob/0f44080d7927b9949b9c67128f1efc9ea1239bd1/examples/js/offscreen/scene.js
 import { PerspectiveCamera, Scene, WebGLRenderer, Fog, Color } from 'three'
 import Example from '@/models/example'
-// PRNG
 
 export default class App {
   /**
@@ -35,7 +33,7 @@ export default class App {
     /**
      * set three.js config
      */
-    this.camera = new PerspectiveCamera(40, width / height, 1, 1000)
+    this.camera = new PerspectiveCamera(75, width / height, 0.1, 1000)
     this.scene = new Scene()
     this.renderer = new WebGLRenderer({ antialias: true, canvas: canvas })
     this.renderer.setPixelRatio(pixelRatio)
@@ -66,7 +64,7 @@ export default class App {
    * init
    */
   public init() {
-    this.camera.position.z = 200
+    this.camera.position.z = 5
     this.scene.fog = new Fog(0x444466, 100, 400)
     this.scene.background = new Color(0x444466)
     this.scene.add(this.example)
