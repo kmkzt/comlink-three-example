@@ -20,7 +20,7 @@ const init = async () => {
       height: window.innerHeight,
       pixelRatio: window.devicePixelRatio
     })
-    app.init()
+    app.animate()
     return
   }
 
@@ -44,7 +44,7 @@ const init = async () => {
       [offscreen]
     )
   )
-  app.init()
+  app.animate()
 }
 
 init()
