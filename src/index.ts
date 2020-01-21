@@ -2,6 +2,7 @@
 import * as Comlink from 'comlink'
 import App from './app'
 import * as AppWorker from './app.worker'
+import './shared/event.transferhandler'
 
 const init = async () => {
   // Offscreen canvas
@@ -21,6 +22,7 @@ const init = async () => {
       pixelRatio: window.devicePixelRatio
     })
     app.animate()
+    htmlCanvas.addEventListener('click', app.handleClick)
     return
   }
 
@@ -45,6 +47,7 @@ const init = async () => {
     )
   )
   app.animate()
+  htmlCanvas.addEventListener('click', app.handleClick.bind(app))
 }
 
 init()

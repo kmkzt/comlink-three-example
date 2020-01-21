@@ -54,6 +54,7 @@ export default class App {
      */
     this.init = this.init.bind(this)
     this.animate = this.animate.bind(this)
+    this.handleClick = this.handleClick.bind(this)
     /**
      * Init
      */
@@ -70,6 +71,15 @@ export default class App {
     this.scene.add(this.example)
   }
 
+  /**
+   * ClickEventHandler
+   */
+  public handleClick(e: MouseEvent) {
+    console.log(e)
+    // TODO: fix preventDefault
+    // e.preventDefault()
+    this.example.changeRotateRandom()
+  }
   /**
    * animation behavior
    */
