@@ -40,6 +40,7 @@
     "@types/html-webpack-plugin": "3.2.1",
     "@types/jest": "24.0.23",
     "@types/node": "11.15.3",
+    "@types/offscreencanvas": "2019.6.1",
     "@types/prettier": "1.19.0",
     "@types/rimraf": "2.0.3",
     "@types/stats.js": "0.17.0",
