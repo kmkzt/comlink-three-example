@@ -10,15 +10,18 @@ const init = async () => {
     'app'
   ) as HTMLCanvasElement
 
+  const { width, height, top, left } = htmlCanvas.getBoundingClientRect()
   /**
    * Not Support OffScreen mode
    */
   if (!htmlCanvas.transferControlToOffscreen) {
     console.info('Not support Offscreen Canvas')
     const app = new App({
+      width,
+      height,
+      top,
+      left,
       canvas: htmlCanvas,
-      width: window.innerWidth,
-      height: window.innerHeight,
       pixelRatio: window.devicePixelRatio
     })
     app.animate()
@@ -37,9 +40,11 @@ const init = async () => {
   const app = await new OffscreenApp(
     Comlink.transfer(
       {
+        width,
+        height,
+        top,
+        left,
         canvas: offscreen,
-        width: window.innerWidth,
-        height: window.innerHeight,
         pixelRatio: window.devicePixelRatio
       },
       // @ts-ignore

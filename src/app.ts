@@ -13,6 +13,8 @@ export default class App {
    * */
   private width: number
   private height: number
+  private left: number
+  private top: number
   private pixelRatio: number
   private canvas: HTMLCanvasElement
   /**
@@ -23,11 +25,15 @@ export default class App {
     canvas,
     width,
     height,
+    left,
+    top,
     pixelRatio
   }: {
     canvas: HTMLCanvasElement
     width: number
     height: number
+    left: number
+    top: number
     pixelRatio: number
   }) {
     /**
@@ -43,6 +49,8 @@ export default class App {
      */
     this.width = width
     this.height = height
+    this.left = left
+    this.top = top
     this.pixelRatio = pixelRatio
     this.canvas = canvas
     /**
@@ -68,6 +76,8 @@ export default class App {
     this.camera.position.z = 5
     this.scene.fog = new Fog(0x444466, 100, 400)
     this.scene.background = new Color(0x444466)
+    this.example.position.x = 0
+    this.example.position.y = 0
     this.scene.add(this.example)
   }
 
@@ -78,6 +88,8 @@ export default class App {
     console.log(e)
     // TODO: fix preventDefault
     // e.preventDefault()
+    this.example.position.x = ((e.clientX - this.left) / this.width) * 2 - 1
+    this.example.position.y = ((e.clientY - this.top) / this.height) * 2 + 1
     this.example.changeRotateRandom()
   }
   /**
