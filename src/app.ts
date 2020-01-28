@@ -1,5 +1,6 @@
 import { PerspectiveCamera, Scene, WebGLRenderer, Fog, Color } from 'three'
 import Example from '@/models/example'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 export default class App {
   /**
@@ -8,6 +9,12 @@ export default class App {
   private camera: PerspectiveCamera
   private scene: Scene
   private renderer: WebGLRenderer
+
+  /**
+   * OrbitControls
+   */
+  // TODO: add orbitControls
+  private controls: OrbitControls
   /**
    * main page context
    * */
@@ -44,6 +51,7 @@ export default class App {
     this.renderer = new WebGLRenderer({ antialias: true, canvas: canvas })
     this.renderer.setPixelRatio(pixelRatio)
     this.renderer.setSize(width, height, false)
+
     /**
      * set context
      */
@@ -53,6 +61,21 @@ export default class App {
     this.top = top
     this.pixelRatio = pixelRatio
     this.canvas = canvas
+    /**
+     * SET OrbitConrols
+     * TODO: Fix Event handler.
+     */
+
+    // Escape document is not defined.
+    if (!(self as any).document) {
+      ;(self as any).document = {
+        addEventListener: this.canvas.addEventListener.bind(this.canvas),
+        removeEventListener: this.canvas.removeEventListener.bind(this.canvas)
+      }
+    }
+    this.controls = new OrbitControls(this.camera, this.canvas)
+    this.controls.target.set(0, 0, 0)
+    this.controls.update()
     /**
      * set models
      */
@@ -79,6 +102,8 @@ export default class App {
     this.example.position.x = 0
     this.example.position.y = 0
     this.scene.add(this.example)
+    // orbitControls
+    this.controls.addEventListener('change', this.animate)
   }
 
   /**

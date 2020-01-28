@@ -14,7 +14,10 @@ const init = async () => {
   /**
    * Not Support OffScreen mode
    */
-  if (!htmlCanvas.transferControlToOffscreen) {
+  if (
+    !htmlCanvas.transferControlToOffscreen ||
+    location.search.includes('?no_offscreen')
+  ) {
     console.info('Not support Offscreen Canvas')
     const app = new App({
       width,
