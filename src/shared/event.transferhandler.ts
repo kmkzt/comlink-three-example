@@ -20,12 +20,24 @@ Comlink.transferHandlers.set('click', {
       pageY,
       screenX,
       screenY,
-      touches,
       deltaX,
       deltaY,
       keyCode,
-      type
+      type,
+      ctrlKey,
+      shiftKey,
+      button
     } = ev
+    const touches = []
+    if (ev?.touches?.length > 0) {
+      for (let i = 0; i < ev.touches.length; ++i) {
+        const touch = ev.touches[i]
+        touches.push({
+          pageX: touch.pageX,
+          pageY: touch.pageY
+        })
+      }
+    }
     return [
       {
         x,
@@ -46,7 +58,10 @@ Comlink.transferHandlers.set('click', {
         deltaX,
         deltaY,
         keyCode,
-        detail: ev && ev.detail
+        detail: ev && ev.detail,
+        ctrlKey,
+        shiftKey,
+        button
       },
       []
     ]
