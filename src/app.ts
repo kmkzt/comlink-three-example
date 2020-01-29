@@ -1,14 +1,7 @@
-// refference: https://threejsfundamentals.org/threejs/lessons/threejs-offscreencanvas.html
-import {
-  PerspectiveCamera,
-  Scene,
-  WebGLRenderer,
-  Fog,
-  Color,
-  EventDispatcher
-} from 'three'
+import { PerspectiveCamera, Scene, WebGLRenderer, Fog, Color } from 'three'
 import Example from '@/models/example'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import ProxyElement from './utils/ProxyElement'
 
 export default class App {
   /**
@@ -23,7 +16,8 @@ export default class App {
    */
   // TODO: add orbitControls
   private controls: OrbitControls
-  private workerListener: EventDispatcher
+  // for offscreenCanvas
+  private workerElement: ProxyElement | undefined
   /**
    * main page context
    * */
@@ -33,6 +27,7 @@ export default class App {
   private top: number
   private pixelRatio: number
   private canvas: HTMLCanvasElement
+
   /**
    * three object
    */
@@ -75,15 +70,28 @@ export default class App {
      * TODO: Fix Event handler.
      */
     // Escape document is not defined.
+    // refference: https://threejsfundamentals.org/threejs/lessons/threejs-offscreencanvas.html
     if (!(self as any).document) {
-      ;(self as any).window = this.canvas
+      this.workerElement = new ProxyElement({
+        width,
+        height,
+        left,
+        top
+      })
+      ;(self as any).window = this
       ;(self as any).document = {
-        addEventListener: this.canvas.addEventListener.bind(this.canvas),
-        removeEventListener: this.canvas.removeEventListener.bind(this.canvas)
+        addEventListener: this.workerElement.addEventListener.bind(
+          this.workerElement
+        ),
+        removeEventListener: this.workerElement.removeEventListener.bind(
+          this.workerElement
+        )
       }
     }
-    this.workerListener = new EventDispatcher()
-    this.controls = new OrbitControls(this.camera, this.canvas)
+    this.controls = new OrbitControls(
+      this.camera,
+      <any>this.workerElement || this.canvas
+    )
     this.controls.target.set(0, 0, 0)
     this.controls.update()
     /**
@@ -113,8 +121,8 @@ export default class App {
     this.example.position.x = 0
     this.example.position.y = 0
     this.scene.add(this.example)
-    // orbitControls
-    this.controls.addEventListener('change', this.animate)
+    // orbitControls debug
+    this.controls.addEventListener('change', e => console.log(e))
   }
 
   /**
@@ -134,11 +142,15 @@ export default class App {
    * use for worker.
    */
   public handleEventWorker(e: any) {
-    // console.log(e)
+    if (!this.workerElement) {
+      console.error('not offscreenCanvas')
+      return
+    }
     function noop() {}
     e.preventDefault = noop
     e.stopPropagation = noop
-    this.workerListener.dispatchEvent(e)
+
+    this.workerElement.dispatchEvent(e)
   }
   /**
    * animation behavior
