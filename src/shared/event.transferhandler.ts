@@ -29,7 +29,7 @@ Comlink.transferHandlers.set('click', {
       button
     } = ev
     const touches = []
-    if (ev?.touches?.length > 0) {
+    if (ev?.touches) {
       for (let i = 0; i < ev.touches.length; ++i) {
         const touch = ev.touches[i]
         touches.push({
