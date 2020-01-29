@@ -28,6 +28,8 @@ const init = async () => {
       pixelRatio: window.devicePixelRatio
     })
     app.animate()
+
+    // TODO: Move app
     htmlCanvas.addEventListener('click', app.handleClick)
     return
   }
@@ -55,7 +57,24 @@ const init = async () => {
     )
   )
   app.animate()
+  // TODO: Move app
   htmlCanvas.addEventListener('click', app.handleClick.bind(app))
+
+  const eventType: Array<keyof GlobalEventHandlersEventMap> = [
+    'click',
+    'contextmenu',
+    'mousedown',
+    'mousemove',
+    'mouseup',
+    'touchstart',
+    'touchmove',
+    'touchend',
+    'wheel',
+    'keydown'
+  ]
+  eventType.map((type: keyof GlobalEventHandlersEventMap, index: number) => {
+    htmlCanvas.addEventListener(type, app.handleEventWorker.bind(app))
+  })
 }
 
 init()

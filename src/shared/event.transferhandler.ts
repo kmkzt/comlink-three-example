@@ -5,33 +5,48 @@ Comlink.transferHandlers.set('click', {
   canHandle(ev: any) {
     return ev instanceof Event
   },
-  serialize(ev: MouseEvent) {
+  serialize(ev: MouseEvent & TouchEvent & WheelEvent & KeyboardEvent) {
     const {
-      target,
+      x,
+      y,
+      // target,
       offsetX,
       offsetY,
       clientX,
       clientY,
+      movementX,
+      movementY,
       pageX,
       pageY,
       screenX,
       screenY,
-      x,
-      y
+      touches,
+      deltaX,
+      deltaY,
+      keyCode,
+      type
     } = ev
     return [
       {
+        x,
+        y,
+        type,
         // target,
         offsetX,
         offsetY,
         clientX,
         clientY,
+        movementX,
+        movementY,
         pageX,
         pageY,
         screenX,
         screenY,
-        x,
-        y
+        touches,
+        deltaX,
+        deltaY,
+        keyCode,
+        detail: ev && ev.detail
       },
       []
     ]

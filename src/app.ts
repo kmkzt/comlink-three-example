@@ -1,4 +1,12 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, Fog, Color } from 'three'
+// refference: https://threejsfundamentals.org/threejs/lessons/threejs-offscreencanvas.html
+import {
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+  Fog,
+  Color,
+  EventDispatcher
+} from 'three'
 import Example from '@/models/example'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
@@ -15,6 +23,7 @@ export default class App {
    */
   // TODO: add orbitControls
   private controls: OrbitControls
+  private workerListener: EventDispatcher
   /**
    * main page context
    * */
@@ -65,14 +74,15 @@ export default class App {
      * SET OrbitConrols
      * TODO: Fix Event handler.
      */
-
     // Escape document is not defined.
     if (!(self as any).document) {
+      ;(self as any).window = this.canvas
       ;(self as any).document = {
         addEventListener: this.canvas.addEventListener.bind(this.canvas),
         removeEventListener: this.canvas.removeEventListener.bind(this.canvas)
       }
     }
+    this.workerListener = new EventDispatcher()
     this.controls = new OrbitControls(this.camera, this.canvas)
     this.controls.target.set(0, 0, 0)
     this.controls.update()
@@ -86,6 +96,7 @@ export default class App {
     this.init = this.init.bind(this)
     this.animate = this.animate.bind(this)
     this.handleClick = this.handleClick.bind(this)
+    this.handleEventWorker = this.handleEventWorker.bind(this)
     /**
      * Init
      */
@@ -116,6 +127,18 @@ export default class App {
     this.example.position.x = ((e.clientX - this.left) / this.width) * 2 - 1
     this.example.position.y = ((e.clientY - this.top) / this.height) * 2 + 1
     this.example.changeRotateRandom()
+  }
+
+  /**
+   * handleEvent
+   * use for worker.
+   */
+  public handleEventWorker(e: any) {
+    // console.log(e)
+    function noop() {}
+    e.preventDefault = noop
+    e.stopPropagation = noop
+    this.workerListener.dispatchEvent(e)
   }
   /**
    * animation behavior
