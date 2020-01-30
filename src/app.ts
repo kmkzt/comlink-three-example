@@ -14,10 +14,9 @@ export default class App {
   /**
    * OrbitControls
    */
-  // TODO: add orbitControls
   private controls: OrbitControls
-  // for offscreenCanvas
-  private workerElement: ProxyElement | undefined
+  private listenerElement: HTMLElement
+  private isOffscrenCanvas: boolean = false
   /**
    * main page context
    * */
@@ -69,29 +68,29 @@ export default class App {
      * SET OrbitConrols
      * TODO: Fix Event handler.
      */
-    // Escape document is not defined.
+    // For offscrenn canvas. Escape document is not defined.
     // refference: https://threejsfundamentals.org/threejs/lessons/threejs-offscreencanvas.html
     if (!(self as any).document) {
-      this.workerElement = new ProxyElement({
+      this.isOffscrenCanvas = true
+      this.listenerElement = new ProxyElement({
         width,
         height,
         left,
         top
-      })
-      ;(self as any).window = this
+      }) as any
+      ;(self as any).window = this.listenerElement
       ;(self as any).document = {
-        addEventListener: this.workerElement.addEventListener.bind(
-          this.workerElement
+        addEventListener: this.listenerElement.addEventListener.bind(
+          this.listenerElement
         ),
-        removeEventListener: this.workerElement.removeEventListener.bind(
-          this.workerElement
+        removeEventListener: this.listenerElement.removeEventListener.bind(
+          this.listenerElement
         )
       }
+    } else {
+      this.listenerElement = this.canvas
     }
-    this.controls = new OrbitControls(
-      this.camera,
-      <any>this.workerElement || this.canvas
-    )
+    this.controls = new OrbitControls(this.camera, this.listenerElement)
     this.controls.target.set(0, 0, 0)
     this.controls.update()
     /**
@@ -115,23 +114,31 @@ export default class App {
    * init
    */
   public init() {
+    /**
+     * Three config
+     */
     this.camera.position.z = 5
     this.scene.fog = new Fog(0x444466, 100, 400)
     this.scene.background = new Color(0x444466)
     this.example.position.x = 0
     this.example.position.y = 0
     this.scene.add(this.example)
-    // orbitControls debug
-    this.controls.addEventListener('change', e => console.log(e))
+    /**
+     * EventHandler
+     */
+    this.listenerElement.addEventListener('click', this.handleClick)
+    // this.controls.addEventListener('change', e => console.log(e)) // orbitControls debug
+    /**
+     * start animation loop
+     */
+    this.animate()
   }
 
   /**
    * ClickEventHandler
    */
   public handleClick(e: MouseEvent) {
-    console.log(e)
-    // TODO: fix preventDefault
-    // e.preventDefault()
+    e.preventDefault()
     this.example.position.x = ((e.clientX - this.left) / this.width) * 2 - 1
     this.example.position.y = ((e.clientY - this.top) / this.height) * 2 + 1
     this.example.changeRotateRandom()
@@ -142,7 +149,7 @@ export default class App {
    * use for worker.
    */
   public handleEventWorker(e: any) {
-    if (!this.workerElement) {
+    if (!this.isOffscrenCanvas) {
       console.error('not offscreenCanvas')
       return
     }
@@ -150,7 +157,7 @@ export default class App {
     e.preventDefault = noop
     e.stopPropagation = noop
 
-    this.workerElement.dispatchEvent(e)
+    this.listenerElement.dispatchEvent(e)
   }
   /**
    * animation behavior

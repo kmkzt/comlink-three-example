@@ -2,7 +2,7 @@
 import { EventDispatcher } from 'three'
 
 /**
- * For offscrennCanvas dammyElement
+ * offscrennCanvas dammyElement for orbitControls
  */
 export default class ProxyElement extends EventDispatcher {
   /**

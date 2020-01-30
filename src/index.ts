@@ -15,6 +15,7 @@ const init = async () => {
    * Not Support OffScreen mode
    */
   if (
+    // @ts-ignore
     !htmlCanvas.transferControlToOffscreen ||
     location.search.includes('?no_offscreen')
   ) {
@@ -27,10 +28,7 @@ const init = async () => {
       canvas: htmlCanvas,
       pixelRatio: window.devicePixelRatio
     })
-    app.animate()
 
-    // TODO: Move app
-    htmlCanvas.addEventListener('click', app.handleClick)
     return
   }
 
@@ -38,6 +36,7 @@ const init = async () => {
    * OffScreen mode
    */
   console.info('Offscreen Canvas')
+  // @ts-ignore
   const offscreen = htmlCanvas.transferControlToOffscreen()
   // @ts-ignore
   const OffscreenApp = Comlink.wrap(new AppWorker())
@@ -56,9 +55,6 @@ const init = async () => {
       [offscreen]
     )
   )
-  app.animate()
-  // TODO: Move app
-  htmlCanvas.addEventListener('click', app.handleClick.bind(app))
 
   const eventType: Array<keyof GlobalEventHandlersEventMap> = [
     'click',
