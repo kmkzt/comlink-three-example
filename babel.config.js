@@ -3,7 +3,14 @@ module.exports = api => {
 
   return {
     presets: [
-      '@babel/preset-env'
+      [
+        '@babel/preset-env',
+        {
+          targets: {
+            node: true
+          }
+        }
+      ]
       // add this only babel-loader
       // '@babel/preset-typescript',
       // '@babel/preset-react'
