@@ -1,5 +1,5 @@
 {
-  "name": "comlink-example",
+  "name": "comlink-three-example",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,10 +12,10 @@
     "lint:fix": "prettier --write ./src/**/*.{ts,tsx}"
   },
   "keywords": [],
-  "author": "",
+  "author": "kmkzt",
   "license": "ISC",
   "dependencies": {
-    "comlink": "^4.2.0",
+    "comlink": "4.2.0",
     "dat.gui": "0.7.6",
     "stats.js": "0.17.0",
     "three": "0.111.0"
