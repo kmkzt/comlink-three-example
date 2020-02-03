@@ -1,4 +1,9 @@
-import { Mesh, MeshBasicMaterial, BoxBufferGeometry } from 'three'
+import {
+  Mesh,
+  MeshBasicMaterial,
+  BoxBufferGeometry,
+  MeshLambertMaterial
+} from 'three'
 
 const colorMaterial = [0x00ff00, 0xff0000, 0xff0000, 0x00ffff]
 
@@ -11,7 +16,7 @@ export default class Example extends Mesh {
   constructor() {
     super(
       new BoxBufferGeometry(1, 1, 1),
-      new MeshBasicMaterial({ color: getColor() })
+      new MeshLambertMaterial({ color: getColor() })
     )
     this.animate = this.animate.bind(this)
     this.changeRotateRandom = this.changeRotateRandom.bind(this)
@@ -21,7 +26,7 @@ export default class Example extends Mesh {
     this.rotateAnimationX = (Math.random() - 0.5) * 2
     this.rotateAnimationY = (Math.random() - 0.5) * 2
     this.rotateAnimationZ = (Math.random() - 0.5) * 2
-    this.material = new MeshBasicMaterial({ color: getColor() })
+    this.material = new MeshLambertMaterial({ color: getColor() })
   }
   public animate() {
     this.rotation.x += this.rotateAnimationX

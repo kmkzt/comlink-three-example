@@ -1,8 +1,15 @@
-import { PerspectiveCamera, Scene, WebGLRenderer, Fog, Color } from 'three'
+import {
+  PerspectiveCamera,
+  Scene,
+  WebGLRenderer,
+  Fog,
+  Color,
+  DirectionalLight
+} from 'three'
 import Example from '@/models/example'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import ProxyElement from './utils/ProxyElement'
-
+import { genParticle } from '@/models/particle'
 export default class App {
   /**
    * Render config
@@ -120,9 +127,18 @@ export default class App {
     this.camera.position.z = 5
     this.scene.fog = new Fog(0x444466, 100, 400)
     this.scene.background = new Color(0x444466)
+    const light = new DirectionalLight(0xffffff, 1)
+    light.position.set(1, 1, 1).normalize()
+
+    /**
+     * Example Application
+     */
     this.example.position.x = 0
     this.example.position.y = 0
     this.scene.add(this.example)
+    this.scene.add(light)
+    genParticle(this.scene)
+
     /**
      * EventHandler
      */
