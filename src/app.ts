@@ -165,10 +165,5 @@ export default class App {
   public animate() {
     this.example.animate()
     this.renderer.render(this.scene, this.camera)
-    if (self.requestAnimationFrame) {
-      self.requestAnimationFrame(this.animate)
-    } else {
-      // Firefox
-    }
   }
 }

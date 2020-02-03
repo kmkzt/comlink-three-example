@@ -3,6 +3,27 @@ import * as Comlink from 'comlink'
 import App from './app'
 import * as AppWorker from './app.worker'
 import './shared/event.transferhandler'
+import Stats from 'stats.js'
+
+/**
+ * animation
+ * @param {() => void} cb animation update render
+ */
+const startAnmation = (update: () => void) => {
+  const stats = new Stats()
+  document.body.appendChild(stats.dom)
+  const animate = () => {
+    if (self.requestAnimationFrame) {
+      self.requestAnimationFrame(animate)
+    } else {
+      // Firefox
+    }
+    stats.begin()
+    update()
+    stats.end()
+  }
+  animate()
+}
 
 const init = async () => {
   // Offscreen canvas
@@ -28,7 +49,7 @@ const init = async () => {
       canvas: htmlCanvas,
       pixelRatio: window.devicePixelRatio
     })
-
+    startAnmation(app.animate)
     return
   }
 
@@ -55,6 +76,7 @@ const init = async () => {
       [offscreen]
     )
   )
+  startAnmation(app.animate)
 
   const eventType: Array<keyof GlobalEventHandlersEventMap> = [
     'click',
