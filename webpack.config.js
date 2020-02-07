@@ -4,6 +4,7 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin')
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const Dotenv = require('dotenv-webpack')
 
 const isDevelopment = process.env.NODE_ENV === 'development'
@@ -120,8 +121,16 @@ const config = {
       reportFiles: ['src/**/*.{ts,tsx}']
     }),
     new HtmlWebpackPlugin({
-      template: resolve('template.html')
-    })
+      template: resolve('template/app.html'),
+      filename: 'app.html'
+    }),
+    new CopyPlugin([
+      {
+        from: 'node_modules/three/examples/js/libs/draco',
+        to: 'libs/draco'
+      },
+      { from: 'template/index.html', to: '' }
+    ])
   ],
 
   optimization: {

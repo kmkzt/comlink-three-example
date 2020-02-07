@@ -1,9 +1,9 @@
 import { Scene, BoxBufferGeometry, Mesh, MeshLambertMaterial } from 'three'
 
-export const genParticle = (scene: Scene) => {
+export const genParticle = (scene: Scene, num: number) => {
   const geometry = new BoxBufferGeometry(20, 20, 20)
 
-  for (let i = 0; i < 4000; i++) {
+  for (let i = 0; i < num; i++) {
     const object = new Mesh(
       geometry,
       new MeshLambertMaterial({ color: Math.random() * 0xffffff })

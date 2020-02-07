@@ -1,9 +1,9 @@
 // TODO: Fix types error
 import * as Comlink from 'comlink'
+import Stats from 'stats.js'
 import App from './app'
 import * as AppWorker from './app.worker'
 import './shared/event.transferhandler'
-import Stats from 'stats.js'
 
 /**
  * animation
@@ -12,6 +12,7 @@ import Stats from 'stats.js'
 const startAnmation = (update: () => void) => {
   const stats = new Stats()
   document.body.appendChild(stats.dom)
+
   const animate = () => {
     if (self.requestAnimationFrame) {
       self.requestAnimationFrame(animate)
@@ -25,38 +26,24 @@ const startAnmation = (update: () => void) => {
   animate()
 }
 
-const init = async () => {
-  // Offscreen canvas
-  const htmlCanvas: HTMLCanvasElement = document.getElementById(
-    'app'
-  ) as HTMLCanvasElement
-
+/**
+ * normal App
+ */
+const renderApp = async (htmlCanvas: HTMLCanvasElement) => {
   const { width, height, top, left } = htmlCanvas.getBoundingClientRect()
-  /**
-   * Not Support OffScreen mode
-   */
-  if (
-    // @ts-ignore
-    !htmlCanvas.transferControlToOffscreen ||
-    location.search.includes('?no_offscreen')
-  ) {
-    console.info('Not support Offscreen Canvas')
-    const app = new App({
-      width,
-      height,
-      top,
-      left,
-      canvas: htmlCanvas,
-      pixelRatio: window.devicePixelRatio
-    })
-    startAnmation(app.animate)
-    return
-  }
+  const app = new App({
+    width,
+    height,
+    top,
+    left,
+    canvas: htmlCanvas,
+    pixelRatio: window.devicePixelRatio
+  })
+  startAnmation(app.animate)
+}
 
-  /**
-   * OffScreen mode
-   */
-  console.info('Offscreen Canvas')
+const renderOffscreenApp = async (htmlCanvas: HTMLCanvasElement) => {
+  const { width, height, top, left } = htmlCanvas.getBoundingClientRect()
   // @ts-ignore
   const offscreen = htmlCanvas.transferControlToOffscreen()
   // @ts-ignore
@@ -78,6 +65,9 @@ const init = async () => {
   )
   startAnmation(app.animate)
 
+  /**
+   * worker eventListener
+   */
   const eventType: Array<keyof GlobalEventHandlersEventMap> = [
     'click',
     'contextmenu',
@@ -93,6 +83,21 @@ const init = async () => {
   eventType.map((type: keyof GlobalEventHandlersEventMap, index: number) => {
     htmlCanvas.addEventListener(type, app.handleEventWorker.bind(app))
   })
+}
+
+const init = async () => {
+  const el = document.getElementById('app') as HTMLCanvasElement
+  const title = document.getElementById('title') as HTMLElement
+  if (location.search.includes('?no_offscreen')) {
+    title.innerHTML = 'NORMAL APP'
+    renderApp(el)
+    return
+  }
+  // @ts-ignore
+  if (el.transferControlToOffscreen) {
+    title.innerHTML = 'OFFSCREEN CANVAS APP'
+    await renderOffscreenApp(el)
+  }
 }
 
 init()
