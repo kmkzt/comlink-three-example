@@ -2,7 +2,6 @@ const webpack = require('webpack')
 const { join } = require('path')
 
 module.exports = {
-  mode: 'development',
   devtool: 'source-map',
   devServer: {
     contentBase: join(__dirname, 'dist'),

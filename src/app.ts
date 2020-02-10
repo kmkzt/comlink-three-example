@@ -137,7 +137,7 @@ export default class App {
     this.example.position.y = 0
     this.scene.add(this.example)
     this.scene.add(light)
-    genParticle(this.scene, 2000)
+    genParticle(this.scene, 1000)
 
     /**
      * EventHandler

@@ -121,15 +121,15 @@ const config = {
       reportFiles: ['src/**/*.{ts,tsx}']
     }),
     new HtmlWebpackPlugin({
-      template: resolve('template/app.html'),
-      filename: 'app.html'
+      template: resolve('template/index.html'),
+      filename: 'index.html'
     }),
     new CopyPlugin([
       {
         from: 'node_modules/three/examples/js/libs/draco',
         to: 'libs/draco'
       },
-      { from: 'template/index.html', to: '' }
+      { from: 'template/compare.html', to: '' }
     ])
   ],
 
