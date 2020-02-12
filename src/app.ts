@@ -4,7 +4,9 @@ import {
   WebGLRenderer,
   Fog,
   Color,
-  DirectionalLight
+  DirectionalLight,
+  Vector2,
+  Raycaster
 } from 'three'
 import Example from '@/models/example'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -17,7 +19,8 @@ export default class App {
   private camera: PerspectiveCamera
   private scene: Scene
   private renderer: WebGLRenderer
-
+  private mouse = new Vector2()
+  private raycaster = new Raycaster()
   /**
    * OrbitControls
    */
@@ -176,10 +179,24 @@ export default class App {
     this.listenerElement.dispatchEvent(e)
   }
   /**
+   * update mouse
+   */
+  public handleMouseMove(e: MouseEvent) {
+    e.preventDefault()
+    this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1
+    this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1
+  }
+  /**
    * animation behavior
    */
   public animate() {
     this.example.animate()
+    this.raycaster.setFromCamera(this.mouse, this.camera)
+    // intersect
+    const intersects = this.raycaster.intersectObjects(this.scene.children)
+    if (intersects.length > 0) {
+      console.log(intersects)
+    }
     this.renderer.render(this.scene, this.camera)
   }
 }
